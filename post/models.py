@@ -5,11 +5,10 @@ from django.conf import settings
 class Post(models.Model):
     title = models.CharField(max_length=250, verbose_name='Заголовок')
     body = models.TextField(verbose_name='Текст')
-    image = models.ImageField(verbose_name='Изображение')
+    image = models.ImageField(upload_to='posts/images/', verbose_name='Изображение', blank=True, null=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
-    comment = models.CharField(max_length=250, verbose_name='комментарий')
     date_created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-    date_editing = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    date_editing = models.DateTimeField(auto_now=True, blank=True, null=True)
 
     def __str__(self):
         return self.title
@@ -20,10 +19,11 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name='пост')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name='пост', related_name='comments')
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     comment = models.CharField(max_length=250, verbose_name='комментарий')
     date_created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-    date_editing = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    date_editing = models.DateTimeField(auto_now=True, blank=True, null=True)
 
     def __str__(self):
         return f'Комментарий #{self.pk} к посту {self.post}'
