@@ -3,6 +3,8 @@ from django.conf import settings
 
 
 class Post(models.Model):
+    """Модель пост"""
+
     title = models.CharField(max_length=250, verbose_name='Заголовок')
     body = models.TextField(verbose_name='Текст')
     image = models.ImageField(upload_to='posts/images/', verbose_name='Изображение', blank=True, null=True)
@@ -19,6 +21,8 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
+    """Модель комментарии"""
+
     post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name='пост', related_name='comments')
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     comment = models.CharField(max_length=250, verbose_name='комментарий')
